@@ -99,7 +99,13 @@ export const TableRowGroup = Node.create({
                 null,
                 rowGroups
               ) as ProseMirrorNode;
-              tr.replaceWith(pos, pos + tableNode.nodeSize, tableNodeNew);
+              // Earlier replacements in this transaction shift later tables,
+              // so map the original positions before replacing.
+              tr.replaceWith(
+                tr.mapping.map(pos),
+                tr.mapping.map(pos + tableNode.nodeSize),
+                tableNodeNew
+              );
 
               modified = true;
             }
